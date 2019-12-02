@@ -3,8 +3,7 @@ language: go
 go:
   - 1.x
 
-services:
-  - docker
+
 
 os:
   - osx
@@ -17,6 +16,7 @@ matrix:
       script:
         - ./.gofmt.sh
         - go test -v ./...
+      services: docker
   allow_failures:
     - os: windows
 
