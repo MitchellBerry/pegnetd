@@ -32,6 +32,7 @@ before_deploy:
   - go get github.com/mitchellh/gox
   - gox -os="linux darwin windows" -arch="amd64"
   - gox -os="linux" -arch="arm arm64"
+  # Gox cross compile for github releases
   - docker build -t $TRAVIS_TAG .
   - docker login -u mitchellberry -p $DOCKERHUBTOKEN
   - docker push $TRAVIS_TAG
