@@ -25,10 +25,13 @@ env:
 
 before_deploy:
     # xgo cross compile for github release
-  - go get github.com/karalabe/xgo
-  - docker build --tag xgo-builder xgo
-  - xgo -image xgo-builder --targets=windows/amd64,darwin/amd64,linux/amd64 .
+  # - go get github.com/karalabe/xgo
+  # - docker build --tag xgo-builder xgo
+  # - xgo -image xgo-builder --targets=windows/amd64,darwin/amd64,linux/amd64 .
     # Docker hub deplyment
+  - go get github.com/mitchellh/gox
+  - gox -os="linux darwin windows" -arch="amd64"
+  - gox -os="linux" -arch="arm arm64"
   - docker build -t $TRAVIS_TAG .
   - docker login -u mitchellberry -p $DOCKERHUBTOKEN
   - docker push $TRAVIS_TAG
@@ -38,9 +41,11 @@ deploy:
   api_key:
     secure: olgjR93AxZChmTriGo4DkofTJIhCqymhRPl1qGcO3uD3xBMsmX760kQhGjkMUcgzenhOhtqxiRB9acYPoqPb2LGYNU2Ff8sMXfx5Oa3JMb9yEnosLbPDwM5D0nTdWhgn
   file:
-    - pegnetd-darwin-10.6-amd64
-    - pegnetd-linux-amd64
-    - pegnetd-windows.exe
+    - pegnetd_windows_amd64.exe
+    - pegnetd_darwin_amd64
+    - pegnetd_linux_amd64
+    - pegnetd_linux_arm
+    - pegnetd_linux_arm64
   on:
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
