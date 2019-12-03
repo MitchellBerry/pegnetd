@@ -3,7 +3,6 @@ language: go
 go:
   - 1.x
 
-
 os:
   - osx
   - windows
@@ -24,12 +23,11 @@ env:
   - LXRBITSIZE=10 REPO=pegnetd DOCKERORG=mitchellberry
 
 before_deploy:
-    # xgo cross compile for github release
+    # xgo cross compile for github deploy
   - go get github.com/karalabe/xgo
   - xgo --targets=windows/amd64,darwin/amd64,linux/amd64 .
-  - ls -al
 
-    # Docker hub deplyment
+    # Docker hub push
   - docker build -t $DOCKERORG/$REPO:$TRAVIS_TAG .
   - docker login -u $DOCKERORG -p $DOCKERHUBTOKEN
   - docker push $DOCKERORG/$REPO:$TRAVIS_TAG
@@ -38,7 +36,7 @@ deploy:
   provider: releases
   api_key:
     secure: $GITHUBTOKEN
-
+  skip_cleanup: true
   file:
     - pegnetd-darwin-10.6-amd64
     - pegnetd-linux-amd64
